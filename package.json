@@ -2,6 +2,12 @@
   "name": "gomamayo-js",
   "version": "0.1.0",
   "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThinaticSystem/gomamayo.js.git"
+  },
+  "author": "ThinaticSystem",
+  "license": "MIT",
   "main": "./built/index.js",
   "bin": "./built/cli.js",
   "scripts": {
@@ -9,8 +15,6 @@
     "cli": "node ./built/cli.js",
     "prepublishOnly": "npm run build"
   },
-  "author": "ThinaticSystem",
-  "license": "MIT",
   "dependencies": {
     "mecab-async": "^0.1.2"
   },
