@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "CommonJS",
+        "outDir": "./built/",
+        "removeComments": true,
+        "strict": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "declaration": true,
+        "noImplicitReturns": true,
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+    },
+    "include": [
+        "src/**/*",
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
