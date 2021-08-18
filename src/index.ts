@@ -1,5 +1,4 @@
-const MeCab = require('mecab-async')
-const mecab = new MeCab()
+import * as MeCab from 'mecab-async'
 
 export default async function (inputString: string): Promise<(string[] | string[][][])[] | null | void> {
   const mecabRes = await analyseString(inputString)
@@ -25,7 +24,7 @@ export default async function (inputString: string): Promise<(string[] | string[
 
 async function analyseString(inputStr: string): Promise<string[][][] | void> {
   const mecabPromise = (input: String): Promise<string[][][]> => new Promise((resolve, reject) => {
-    mecab.parse(input, function (error: Error, result: string[][]) {
+    MeCab.parse(input, function (error: Error, result: string[][]) {
       if (!error) {
         const gomamArray: string[][][] = []
         for (let i = 1; i < result.length; i++) {
