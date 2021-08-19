@@ -1,4 +1,5 @@
 import * as MeCab from 'mecab-async'
+const vowel = require('./vowel_define.json')
 
 
 module.exports.find = findGomamayo
@@ -33,11 +34,11 @@ async function analyseString(inputStr: string): Promise<string[][][] | void> {
           const prev = result[i - 1]
           const now = result[i];
           if (prev[1] === '名詞' && prev[2] !== '数詞' && now[1] === prev[1]) {
-            if (
-              ((prev[6] === '*') ? kataToHira(prev[0]) : prev[6]).slice(-1)
-              === ((now[6] === '*') ? kataToHira(now[0]) : now[6]).slice(0, 1)
-            )
+            const prevYomi = (prev[9] === '*' || prev[9] === undefined) ? prolongedSoundMarkVowelize(prev[0]) : prolongedSoundMarkVowelize(prev[9]) // 読み登録なし=>'*', unk=>undefined
+            const nowYomi = (now[9] === '*' || now[9] === undefined) ? hiraToKana(now[0]) : hiraToKana(now[9])
+            if (prevYomi.slice(-1) === nowYomi.slice(0, 1)) {
               gomamArray.push([prev, now])
+            }
           }
         }
         resolve(gomamArray)
@@ -45,10 +46,19 @@ async function analyseString(inputStr: string): Promise<string[][][] | void> {
         reject(error)
       }
 
-      function kataToHira(inStr: string) { // to be hoisted
-        return inStr.replace(/[ァ-ン]/g, function (s) {
-          return String.fromCharCode(s.charCodeAt(0) - 0x60)
+      function hiraToKana(inStr: string) {
+        return inStr.replace(/[ぁ-ゖ]/g, function (s) {
+          return String.fromCharCode(s.charCodeAt(0) + 0x60)
         })
+      }
+
+      function prolongedSoundMarkVowelize(string: string) { // 長音を母音に変換。副作用でカタカナになる
+        let converted = hiraToKana(string[0])
+        for (let i = 1; i < string.length; i++) {
+          const key = string[i - 1]
+          converted += (string[i] === 'ー') ? vowel[key] : string[i]
+        }
+        return converted
       }
     })
   })
@@ -57,7 +67,7 @@ async function analyseString(inputStr: string): Promise<string[][][] | void> {
     return mecabPromise(sanitize(inputStr))
   } catch (error) { /*to be returned undefined*/console.error(error) }
 
-  function sanitize(inputStr: string): string { // to be hoisted
+  function sanitize(inputStr: string): string {
     // node-mecab-asyncでshell-quote使ってるからだいじょぶそう
     return inputStr
   }

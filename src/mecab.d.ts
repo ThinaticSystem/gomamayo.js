@@ -1,1 +1,1 @@
-declare module 'mecab-async';
+declare module 'mecab-async'
