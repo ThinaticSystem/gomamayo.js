@@ -21,7 +21,7 @@ const gomamayo = require('gomamayo-js');
 * find
 * findSync (wip)
 ## CLI Tool
-run `honi@honi-machine:/gomamayo.js_installed_directory$ npm run cli ごまマヨネーズ`
+run `honi@honi-machine:/gomamayo.js_installed_directory$ npx gomamayo-js ごまマヨネーズ`
 ```
 
 > gomamayo-js@0.1.2 cli

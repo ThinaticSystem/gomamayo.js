@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const gomamayo = require('./index');
 
 (async function () { // Because top-level async functions won't executed
