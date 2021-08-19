@@ -1,9 +1,9 @@
-import findGomamayo from './index'
+const gomamayo = require('./index');
 
-(async function () {
+(async function () { // Because top-level async functions won't executed
   const inString: string = process.argv[2]
   console.log(`入力文字列　　　: ${inString}`)
-  const res = await findGomamayo(inString)
+  const res = await gomamayo.find(inString)
 
   console.log('\n解析結果:')
   if (res) {

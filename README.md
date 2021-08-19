@@ -1,13 +1,13 @@
-# gomamayo.js
+# go**mama**yo.js
 1. [Install MeCab](https://taku910.github.io/mecab/) in your OS
 1. run: `npm install gomamayo-js`
 1. やっていってください
 ## Example
 ```
-import findGomamayo from 'gomamayo-js';
+import gomamayo from 'gomamayo-js';
 
-(async function () {
-  const result = await findGomamayo('コンセントとうもろこし')
+(async function () { // Because top-level async function won't be executed
+  const result = await gomamayo.find('コンセントとうもろこし')
   if (result) { // gomamayo detected
     console.log('ゴママヨやね: ')
     console.log(result[0]) // string[] of gomamayo will be printed
@@ -17,5 +17,8 @@ import findGomamayo from 'gomamayo-js';
   }
 })
 ```
+## List o**f f**unctions
+* find
+* findSync (wip)
 ## License
 This software is released under the MIT License.

@@ -1,6 +1,9 @@
 import * as MeCab from 'mecab-async'
 
-export default async function (inputString: string): Promise<(string[] | string[][][])[] | null | void> {
+
+module.exports.find = findGomamayo
+
+async function findGomamayo(inputString: string): Promise<(string[] | string[][][])[] | null | void> {
   const mecabRes = await analyseString(inputString)
   if (mecabRes) {
     if (mecabRes.length) {
@@ -19,7 +22,6 @@ export default async function (inputString: string): Promise<(string[] | string[
   } else {
     /*めかぶエラー*/
   }
-
 }
 
 async function analyseString(inputStr: string): Promise<string[][][] | void> {
