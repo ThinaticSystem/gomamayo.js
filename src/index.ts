@@ -1,5 +1,5 @@
 import * as MeCab from 'mecab-async'
-const vowel = require('./vowel_define.json')
+const vowel = require('../assets/vowel_define.json')
 
 
 module.exports.find = findGomamayo
