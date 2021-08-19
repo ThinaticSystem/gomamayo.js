@@ -1,6 +1,6 @@
 # go**mama**yo.js
 1. [Install MeCab](https://taku910.github.io/mecab/) in your OS
-1. run: `npm install gomamayo-js`
+1. run: `npm i gomamayo-js`
 1. やっていってください
 ## Example
 ```
@@ -19,7 +19,9 @@ const gomamayo = require('gomamayo-js');
 ```
 ## List o**f f**unctions
 * find
-* findSync (wip)
+## Roadmap
+function findSync()
+高次ゴママヨも評価するオプション
 ## CLI Tool
 run `honi@honi-machine:/gomamayo.js_installed_directory$ npx gomamayo-js ごまマヨネーズ`
 ```
