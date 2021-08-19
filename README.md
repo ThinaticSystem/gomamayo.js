@@ -20,5 +20,43 @@ import gomamayo from 'gomamayo-js';
 ## List o**f f**unctions
 * find
 * findSync (wip)
+## CLI Tool
+run `honi@honi-machine:$ npm run cli ごまマヨネーズ`
+```
+
+> gomamayo-js@0.1.2 cli
+> node ./built/cli.js "ごまマヨネーズ"
+
+入力文字列　　　: ごまマヨネーズ
+
+解析結果:
+[ 'ごまマヨネーズ' ]
+
+解析内容:
+[
+  [
+    [
+      'ごま',
+      '名詞',
+      '普通名詞',
+      '*',
+      '*',
+      'ごま',
+      'ごま',
+      '代表表記:胡麻/ごま カテゴリ:植物;人工物-食べ物 ドメイン:料理・食事'
+    ],
+    [
+      'マヨネーズ',
+      '名詞',
+      '普通名詞',
+      '*',
+      '*',
+      'マヨネーズ',
+      'まよねーず',
+      '代表表記:マヨネーズ/まよねーず カテゴリ:人工物-食べ物 ドメイン:料理・食事'
+    ]
+  ]
+]
+```
 ## License
 This software is released under the MIT License.
