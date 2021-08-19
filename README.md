@@ -4,7 +4,7 @@
 1. やっていってください
 ## Example
 ```
-import gomamayo from 'gomamayo-js';
+const gomamayo = require('gomamayo-js');
 
 (async function () { // Because top-level async function won't be executed
   const result = await gomamayo.find('コンセントとうもろこし')
