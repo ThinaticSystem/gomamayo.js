@@ -20,8 +20,8 @@ const gomamayo = require('gomamayo-js');
 ## List o**f f**unctions
 * find
 ## Roadmap
-function findSync()
-高次ゴママヨも評価するオプション
+* function findSync()  
+* 高次ゴママヨも評価するオプション
 ## CLI Tool
 run `honi@honi-machine:/gomamayo.js_installed_directory$ npx gomamayo-js ごまマヨネーズ`
 ```
