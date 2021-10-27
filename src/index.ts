@@ -22,7 +22,7 @@ export async function find(inputString: string): Promise<(string[] | string[][][
   }
 }
 
-function analyseString(inputStr: string): Promise<string[][][] | void> {
+async function analyseString(inputStr: string): Promise<string[][][] | void> {
   function parseMecab(input: string): Promise<string[][]> {
     return new Promise((resolve, reject) => {
       MeCab.parse(input, (error: Error, result: string[][]) => {
@@ -69,7 +69,7 @@ function analyseString(inputStr: string): Promise<string[][][] | void> {
   }
 
   try {
-    return analyse(sanitize(inputStr))
+    return await analyse(sanitize(inputStr))
   } catch (error) { /*to be returned undefined*/console.error(error) }
 
   function sanitize(inputStr: string): string {
