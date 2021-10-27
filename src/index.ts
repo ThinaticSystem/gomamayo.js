@@ -42,25 +42,25 @@ async function analyseString(inputStr: string): Promise<string[][][] | void> {
       const prev = result[i - 1]
       const now = result[i]
       if (prev[1] === '名詞' && prev[2] !== '数詞' && now[1] === prev[1]) {
-        const prevYomi = (prev[9] === '*' || prev[9] === undefined) ? prolongedSoundMarkVowelize(prev[0]) : prolongedSoundMarkVowelize(prev[9]) // 読み登録なし=>'*', unk=>undefined
-        const nowYomi = (now[9] === '*' || now[9] === undefined) ? hiraToKana(now[0]) : hiraToKana(now[9])
+        const prevYomi = prolongedSoundMarkVowelize((prev[9] === '*' || prev[9] === undefined) ? prev[0] : prev[9]) // 読み登録なし=>'*', unk=>undefined
+        const nowYomi = hiraToKana((now[9] === '*' || now[9] === undefined) ? now[0] : now[9])
         if (prevYomi.slice(-1) === nowYomi.slice(0, 1)) {
           gomamArray.push([prev, now])
         }
       }
     }
 
-    function hiraToKana(inStr: string) {
-      return inStr.replace(/[ぁ-ゖ]/g, function (s) {
+    function hiraToKana(str: string) {
+      return str.replace(/[ぁ-ゖ]/g, s => {
         return String.fromCharCode(s.charCodeAt(0) + 0x60)
       })
     }
 
-    function prolongedSoundMarkVowelize(string: string) { // 長音を母音に変換。副作用でカタカナになる
-      let converted = hiraToKana(string[0])
-      for (let i = 1; i < string.length; i++) {
-        const key = string[i - 1]
-        converted += (string[i] === 'ー') ? vowel[key] : string[i]
+    function prolongedSoundMarkVowelize(str: string) { // 長音を母音に変換。副作用でカタカナになる
+      let converted = hiraToKana(str[0])
+      for (let i = 1; i < str.length; i++) {
+        const key = str[i - 1]
+        converted += (str[i] === 'ー') ? vowel[key] : str[i]
       }
       return converted
     }
