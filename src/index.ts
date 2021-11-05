@@ -1,9 +1,15 @@
 import * as MeCab from 'mecab-async'
 const vowel = require('../assets/vowel_define.json')
 
-function parseMecab(input: string): Promise<string[][]> {
+export type MecabToken = [string, string, string, string, string, string, string, string, string, string]
+
+export type Word = MecabToken
+
+export type WordPair = [Word, Word]
+
+function parseMecab(input: string): Promise<MecabToken[]> {
   return new Promise((resolve, reject) => {
-    MeCab.parse(input, (error: Error, result: string[][]) => {
+    MeCab.parse(input, (error: Error, result: MecabToken[]) => {
       if (error) {
         reject(error)
       } else {
@@ -29,12 +35,11 @@ function prolongedSoundMarkVowelize(str: string) { // 長音を母音に変換�
   return converted
 }
 
-async function analyse(input: string): Promise<[string[], string[]][]> {
-  const result = await parseMecab(input)
-  const gomamArray: [string[], string[]][] = []
-  for (let i = 0; i < result.length - 1; i++) {
-    const first = result[i]
-    const second = result[i + 1]
+function analyse(tokens: MecabToken[]): WordPair[] {
+  const gomamArray: WordPair[] = []
+  for (let i = 0; i < tokens.length - 1; i++) {
+    const first = tokens[i]
+    const second = tokens[i + 1]
     if (first[1] !== '名詞' || first[2] === '数詞' || second[1] !== first[1]) {
       continue
     }
@@ -53,25 +58,20 @@ function sanitize(inputStr: string): string {
   return inputStr
 }
 
-async function analyseString(inputStr: string): Promise<[string[], string[]][] | undefined> {
+export async function find(inputString: string): Promise<[string[], WordPair[]] | null | undefined> {
+  let tokens: MecabToken[]
   try {
-    return await analyse(sanitize(inputStr))
+    tokens = await parseMecab(sanitize(inputString))
   } catch (error) {
     console.error(error)
-    return /*to be returned undefined*/
-  }
-}
-
-export async function find(inputString: string): Promise<[string[], [string[], string[]][]] | null | undefined> {
-  const mecabRes = await analyseString(inputString)
-  if (!mecabRes) {
     return /*めかぶエラー*/
   }
-  if (mecabRes.length == 0) {
+  const gomamayoDetail = analyse(tokens)
+  if (gomamayoDetail.length == 0) {
     return null /*ノーゴママヨ*/
   }
-  const jointStrings: string[] = mecabRes.map(gomamayo => {
-    return gomamayo.map(part => part[0]).join('')
+  const gomamayoArray: string[] = gomamayoDetail.map(gomamayo => {
+    return gomamayo[0][0] + gomamayo[1][0]
   })
-  return [jointStrings, mecabRes]
+  return [gomamayoArray, gomamayoDetail]
 }
