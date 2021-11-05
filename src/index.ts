@@ -1,28 +1,21 @@
 import * as MeCab from 'mecab-async'
 const vowel = require('../assets/vowel_define.json')
 
-export async function find(inputString: string): Promise<(string[] | string[][][])[] | null | void> {
+export async function find(inputString: string): Promise<[string[], [string[], string[]][]] | null | undefined> {
   const mecabRes = await analyseString(inputString)
-  if (mecabRes) {
-    if (mecabRes.length) {
-      const gomamayoStrArray: string[] = []
-      mecabRes.forEach(gomamayo => {
-        let mergedString: string = ''
-        gomamayo.forEach(part => {
-          mergedString += part[0]
-        })
-        gomamayoStrArray.push(mergedString)
-      })
-      return [gomamayoStrArray, mecabRes]
-    } else {
-      return null /*ノーゴママヨ*/
-    }
-  } else {
-    /*めかぶエラー*/
+  if (!mecabRes) {
+    return /*めかぶエラー*/
   }
+  if (mecabRes.length == 0) {
+    return null /*ノーゴママヨ*/
+  }
+  const jointStrings: string[] = mecabRes.map(gomamayo => {
+    return gomamayo.map(part => part[0]).join('')
+  })
+  return [jointStrings, mecabRes]
 }
 
-async function analyseString(inputStr: string): Promise<string[][][] | void> {
+async function analyseString(inputStr: string): Promise<[string[], string[]][] | undefined> {
   function parseMecab(input: string): Promise<string[][]> {
     return new Promise((resolve, reject) => {
       MeCab.parse(input, (error: Error, result: string[][]) => {
@@ -35,19 +28,21 @@ async function analyseString(inputStr: string): Promise<string[][][] | void> {
     })
   }
 
-  async function analyse(input: string): Promise<string[][][]> {
+  async function analyse(input: string): Promise<[string[], string[]][]> {
     const result = await parseMecab(input)
-    const gomamArray: string[][][] = []
-    for (let i = 1; i < result.length; i++) {
-      const prev = result[i - 1]
-      const now = result[i]
-      if (prev[1] === '名詞' && prev[2] !== '数詞' && now[1] === prev[1]) {
-        const prevYomi = prolongedSoundMarkVowelize((prev[9] === '*' || prev[9] === undefined) ? prev[0] : prev[9]) // 読み登録なし=>'*', unk=>undefined
-        const nowYomi = hiraToKana((now[9] === '*' || now[9] === undefined) ? now[0] : now[9])
-        if (prevYomi.slice(-1) === nowYomi.slice(0, 1)) {
-          gomamArray.push([prev, now])
-        }
+    const gomamArray: [string[], string[]][] = []
+    for (let i = 0; i < result.length - 1; i++) {
+      const first = result[i]
+      const second = result[i + 1]
+      if (first[1] !== '名詞' || first[2] === '数詞' || second[1] !== first[1]) {
+        continue
       }
+      const firstYomi = prolongedSoundMarkVowelize((first[9] === '*' || first[9] === undefined) ? first[0] : first[9]) // 読み登録なし=>'*', unk=>undefined
+      const secondYomi = hiraToKana((second[9] === '*' || second[9] === undefined) ? second[0] : second[9])
+      if (firstYomi[firstYomi.length - 1] !== secondYomi[0]) {
+        continue
+      }
+      gomamArray.push([first, second])
     }
 
     function hiraToKana(str: string) {
@@ -58,9 +53,10 @@ async function analyseString(inputStr: string): Promise<string[][][] | void> {
 
     function prolongedSoundMarkVowelize(str: string) { // 長音を母音に変換。副作用でカタカナになる
       let converted = hiraToKana(str[0])
-      for (let i = 1; i < str.length; i++) {
-        const key = str[i - 1]
-        converted += (str[i] === 'ー') ? vowel[key] : str[i]
+      for (let i = 0; i < str.length - 1; i++) {
+        const prev = str[i]
+        const current = str[i + 1]
+        converted += (current === 'ー') ? vowel[prev] : current
       }
       return converted
     }
@@ -70,7 +66,10 @@ async function analyseString(inputStr: string): Promise<string[][][] | void> {
 
   try {
     return await analyse(sanitize(inputStr))
-  } catch (error) { /*to be returned undefined*/console.error(error) }
+  } catch (error) {
+    console.error(error)
+    return /*to be returned undefined*/
+  }
 
   function sanitize(inputStr: string): string {
     // node-mecab-asyncでshell-quote使ってるからだいじょぶそう
