@@ -1,3 +1,4 @@
+import { promisify } from 'util'
 import * as MeCab from 'mecab-async'
 const vowel = require('../assets/vowel_define.json')
 
@@ -7,17 +8,7 @@ export type Word = MecabToken
 
 export type WordPair = [Word, Word]
 
-function parseMecab(input: string): Promise<MecabToken[]> {
-  return new Promise((resolve, reject) => {
-    MeCab.parse(input, (error: Error, result: MecabToken[]) => {
-      if (error) {
-        reject(error)
-      } else {
-        resolve(result)
-      }
-    })
-  })
-}
+const parseMecab: (input: string) => Promise<MecabToken[]> = promisify(MeCab.parse).bind(MeCab)
 
 function hiraToKana(str: string) {
   return str.replace(/[ぁ-ゖ]/g, s => {
