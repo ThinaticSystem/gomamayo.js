@@ -62,3 +62,7 @@ run `honi@honi-machine:/gomamayo.js_installed_directory$ npx gomamayo-js ごま�
 ```
 ## License
 This software is released under the MIT License.
+
+## Links
+- [na2na-p/**gomamayo-deno**](https://github.com/na2na-p/gomamayo-deno)\
+Denoで動作するゴママヨ解析ライブラリ（非依存）（ご紹介したかっただけ）
